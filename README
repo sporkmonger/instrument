@@ -1,0 +1,30 @@
+== Instrument
+
+* Homepage[http://instrument.rubyforge.org/]
+
+== Description
+
+Instrument is a simple library for producing dynamically generated "controls"
+with various templating languages.
+
+== Features
+
+* Generate controls with Erb, Haml, Markaby, or XML Builder.  Instrument
+  doesn't care what template language you prefer.
+* Output XHTML, XML, or JSON.  Instrument doesn't care what your output
+  format is.
+
+== Requirements
+
+* Instrument has no explicit dependencies.  If you want to output Haml, you
+  will need the Haml library installed.  Same goes for any of the other
+  template languages.
+
+== Install
+
+* sudo gem install instrument
+* sudo gem install haml (optional)
+* sudo gem install erubis (optional)
+* sudo gem install markaby (optional)
+* sudo gem install json (optional)
+* sudo gem install builder (optional)

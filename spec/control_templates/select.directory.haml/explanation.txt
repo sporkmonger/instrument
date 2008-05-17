@@ -1,0 +1,2 @@
+# This directory exists to test that a directory cannot be loaded
+# accidentally as if it were a template.

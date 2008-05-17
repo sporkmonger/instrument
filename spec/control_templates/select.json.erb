@@ -1,0 +1,14 @@
+{
+  "select": {
+    "id": "<%= element_id %>",
+    "name": "<%= element_name %>",
+    "options": [
+    <% for selection in selections %>
+      {
+        "label": "<%= selection.label %>",
+        "value": "<%= selection.value %>"
+      }
+    <% end %>
+    ]
+  }
+}

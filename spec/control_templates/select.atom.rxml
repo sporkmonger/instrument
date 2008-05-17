@@ -1,0 +1,19 @@
+require "uuidtools"
+require "time"
+xml.instruct! :xml, :version=>"1.0" 
+xml.feed("xmlns" => "http://www.w3.org/2005/Atom", "xml:lang" => "en_US") do
+  xml.id("urn:uuid:4a11e26e-239c-11dd-adf9-001ec2186a45")
+  xml.title("Select Control")
+  xml.subtitle("Yes, this is silly, but you get the idea.")
+  xml.updated(Time.now.iso8601)
+  for selection in selections
+    xml.entry do
+      xml.id(
+        UUID.sha1_create(UUID_URL_NAMESPACE, "#" + selection.value).to_uri
+      )
+      xml.title(selection.label)
+      xml.link("#" + selection.value)
+      xml.updated(Time.now.iso8601)
+    end
+  end
+end

@@ -1,0 +1,4 @@
+%select{:id => element_id, :name => element_name}
+  - for selection in selections
+    %option{:value => selection.value}
+      = selection.label

@@ -1,0 +1,5 @@
+select :id => element_id, :name => element_name do
+  for selection in selections
+    option selection.label, :value => selection.value
+  end
+end
