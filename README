@@ -14,6 +14,52 @@ with various templating languages.
 * Output XHTML, XML, or JSON.  Instrument doesn't care what your output
   format is.
 
+== Example Usage
+
+select_control.rb:
+
+    require "instrument"
+  
+    class SelectControl < Instrument::Control
+      class Option
+        def initialize(label, value)
+          @label, @value = label, value
+        end
+    
+        attr_accessor :label
+        attr_accessor :value
+      end
+  
+      def element_id
+        return self.options[:id] || self.options[:name]
+      end
+
+      def element_name
+        return self.options[:name]
+      end
+  
+      def selections
+        if !defined?(@selections) || @selections == nil
+          @selections = []
+          for selection in self.options[:selections]
+            if selection.kind_of?(Hash)
+              @selections << Option.new(selection[:label], selection[:value])
+            else
+              @selections << Option.new(selection, selection)
+            end
+          end
+        end
+        return @selections
+      end
+    end
+  
+select.xhtml.haml:
+  
+    %select{:id => element_id, :name => element_name}
+      - for selection in selections
+        %option{:value => selection.value}
+          = selection.label
+
 == Requirements
 
 * Instrument has no explicit dependencies.  If you want to output Haml, you
@@ -26,5 +72,4 @@ with various templating languages.
 * sudo gem install haml (optional)
 * sudo gem install erubis (optional)
 * sudo gem install markaby (optional)
-* sudo gem install json (optional)
 * sudo gem install builder (optional)
