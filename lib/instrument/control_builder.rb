@@ -25,11 +25,16 @@ require "instrument/control"
 
 module Instrument
   module ControlBuilder
+    # Prevents Object#select from being accidentally called.
+    def select(*params, &block) # :nodoc:
+      return self.method_missing(:select, *params, &block)
+    end
+
     # Initializes Instrument::Control subclasses by name.
     def method_missing(method, *params, &block)
       control_class = ::Instrument::Control.lookup(method.to_s)
       if control_class != nil
-        control_class.new(*params, &block)
+        return control_class.new(*params, &block)
       else
         raise NoMethodError,
           "undefined method `#{method}' for " +
