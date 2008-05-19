@@ -22,12 +22,12 @@
 # --
 
 # Used to prevent the class/module from being loaded more than once
-unless defined? Instrument
+unless defined? Instrument::VERSION
   module Instrument #:nodoc:
     module VERSION #:nodoc:
       MAJOR = 0
-      MINOR = 0
-      TINY  = 1
+      MINOR = 1
+      TINY  = 0
 
       STRING = [MAJOR, MINOR, TINY].join('.')
     end
