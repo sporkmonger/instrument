@@ -15,7 +15,6 @@ namespace :gem do
 
     s.add_dependency("rake", ">= 0.7.3")
     s.add_dependency("rspec", ">= 1.0.8")
-    s.add_dependency("assistance", ">= 0.1.5")
 
     s.require_path = "lib"
 

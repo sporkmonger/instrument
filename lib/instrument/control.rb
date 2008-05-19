@@ -21,7 +21,6 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # --
 
-require "assistance/inflector"
 require "instrument/version"
 require "instrument/errors"
 
@@ -105,12 +104,17 @@ module Instrument
     # Returns the options that were used to create the Control.
     attr_reader :options
     
-    # Returns the Control's name.  By default, this is the Control's
-    # class name, downcased, without the Control suffix.  This method
+    # Returns the Control's name.  By default, this is the control's class
+    # name, tranformed into   This method
     # may be overridden by a Control.
     def self.control_name
-      return "base" if self.name == "Instrument::Control"
-      return self.name.gsub(/^.*::/, "").underscore
+      return nil if self.name == "Instrument::Control"
+      return self.name.
+        gsub(/^.*::/, "").
+        gsub(/([A-Z]+)([A-Z][a-z])/, "\\1_\\2").
+        gsub(/([a-z\d])([A-Z])/, "\\1_\\2").
+        tr("-", "_").
+        downcase
     end
     
     # Relays to_format messages to the render method.
