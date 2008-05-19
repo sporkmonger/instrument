@@ -34,9 +34,15 @@ class SelectControl < Instrument::Control
   end
 end
 
+class SuperSelectControl < SelectControl
+end
+
 describe Instrument::Control do
   it "should be able to look up subclasses by name" do
-    Instrument::Control.lookup("select_control").should == SelectControl
+    Instrument::Control.lookup("select_control").should ==
+      SelectControl
+    Instrument::Control.lookup("super_select_control").should ==
+      SuperSelectControl
   end
 
   it "should have RAILS_ROOT/app/controls in the $CONTROL_PATH" do
