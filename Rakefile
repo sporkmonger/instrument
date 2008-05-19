@@ -39,7 +39,7 @@ PKG_FILES = FileList[
 
 task :default => "spec:verify"
 
-windows = (PLATFORM =~ /win32|cygwin/) rescue nil
-SUDO = windows ? "" : "sudo"
+WINDOWS = (RUBY_PLATFORM =~ /mswin|win32|mingw|bccwin|cygwin/) rescue false
+SUDO = WINDOWS ? '' : ('sudo' unless ENV['SUDOLESS'])
 
 Dir['tasks/**/*.rake'].each { |rake| load rake }

@@ -25,7 +25,7 @@ require "instrument/control"
 
 module Instrument
   module ControlBuilder
-    # Prevents Object#select from being accidentally called.
+    # Prevents Kernel#select from being accidentally called.
     def select(*params, &block) # :nodoc:
       return self.method_missing(:select, *params, &block)
     end

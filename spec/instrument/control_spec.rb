@@ -36,7 +36,7 @@ end
 
 describe Instrument::Control do
   it "should be able to look up subclasses by name" do
-    Instrument::Control.lookup("select").should == SelectControl
+    Instrument::Control.lookup("select_control").should == SelectControl
   end
 
   it "should have RAILS_ROOT/app/controls in the $CONTROL_PATH" do
@@ -50,7 +50,7 @@ describe Instrument::Control do
   end
 
   it "should initialize subclasses via method_missing" do
-    Instrument::Control.new.select.class.should == SelectControl
+    Instrument::Control.new.select_control.class.should == SelectControl
   end
   
   it "should still raise an Exception for non-existent methods" do

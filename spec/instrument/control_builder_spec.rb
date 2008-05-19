@@ -11,6 +11,10 @@ class ImageControl < Instrument::Control
   end
 end
 
+# Verifies that Kernel#select isn't accidentally being called.
+class Select < Instrument::Control
+end
+
 describe Instrument::ControlBuilder do
   class ExtendedObject
     include Instrument::ControlBuilder
@@ -21,7 +25,8 @@ describe Instrument::ControlBuilder do
   end
   
   it "should enable mixins to function" do
-    @extended_object.image.class.should == ImageControl
+    @extended_object.image_control.class.should == ImageControl
+    @extended_object.select.class.should == Select
   end
   
   it "should still raise an Exception for non-existent methods" do

@@ -21,6 +21,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # --
 
+require "assistance/inflector"
 require "instrument/version"
 require "instrument/errors"
 
@@ -109,7 +110,7 @@ module Instrument
     # may be overridden by a Control.
     def self.control_name
       return "base" if self.name == "Instrument::Control"
-      return self.name.gsub(/^.*::/, "").gsub(/Control$/, "").downcase
+      return self.name.gsub(/^.*::/, "").underscore
     end
     
     # Relays to_format messages to the render method.
