@@ -36,3 +36,42 @@ namespace :doc do
     Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
   end
 end
+
+namespace :spec do
+  desc "Publish specdoc to RubyForge"
+  task :release => ["spec:specdoc"] do
+    config = YAML.load(
+      File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+    )
+    host = "#{config['username']}@rubyforge.org"
+    remote_dir = RUBY_FORGE_PATH + "/specdoc"
+    local_dir = "specdoc"
+    Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
+  end
+  
+  namespace :rcov do
+    desc "Publish coverage report to RubyForge"
+    task :release => ["spec:rcov"] do
+      config = YAML.load(
+        File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+      )
+      host = "#{config['username']}@rubyforge.org"
+      remote_dir = RUBY_FORGE_PATH + "/coverage"
+      local_dir = "coverage"
+      Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
+    end
+  end
+end
+
+namespace :website do
+  desc "Publish website to RubyForge"
+  task :release => ["doc:release", "spec:release", "spec:rcov:release"] do
+    config = YAML.load(
+      File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+    )
+    host = "#{config['username']}@rubyforge.org"
+    remote_dir = RUBY_FORGE_PATH
+    local_dir = "website"
+    Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
+  end
+end
