@@ -22,10 +22,12 @@
 # --
 
 module Instrument
+  ##
   # Exception raised when a template cannot be found.
   class ResourceNotFoundError < StandardError
   end
 
+  ##
   # Exception raised when a template is found, but it uses an unknown
   # template engine.
   class InvalidTemplateEngineError < StandardError

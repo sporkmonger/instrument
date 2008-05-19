@@ -32,6 +32,7 @@ if defined?(RAILS_ROOT)
 end
 
 module Instrument
+  ##
   # The Instrument::Control class provides a simple way to render nested
   # templates.
   #
@@ -45,11 +46,17 @@ module Instrument
   #   ])
   #   xhtml_output = select_control.to_xhtml
   class Control
+    ##
     # Registers a template type.  Takes a symbol naming the type, and a
     # block which takes a String as input and an Object to use as the
     # execution context and returns the rendered template output as a
     # String.  The block should ensure that all necessary libraries are
     # loaded.
+    # 
+    #  @param [Array] type_list the template types being registered
+    #  @yield the block generates the template output
+    #  @yieldparam [String] the template input
+    #  @yieldparam [Object] the execution context for the template
     def self.register_type(*type_list, &block)
       # Ensure the @@type_map is initialized.
       self.types
@@ -62,7 +69,11 @@ module Instrument
       return nil
     end
     
+    ##
     # Returns a list of registered template types.
+    #
+    #  @return [Array] a list of Symbols for the registered template types
+    #  @see Instrument::Control.register_type
     def self.types
       if !defined?(@@type_map) || @@type_map == nil
         @@type_map = {}
@@ -70,9 +81,13 @@ module Instrument
       return @@type_map.keys
     end
 
+    ##
     # Returns the processor Proc for the specified type.
     #
-    # Raises an ArgumentError if the type is invalid.
+    #  @param [Array] type_list the template types being registered
+    #  @raise ArgumentError raises an error if the type is invalid.
+    #  @return [Proc] the proc that handles template execution
+    #  @see Instrument::Control.register_type
     def self.processor(type)
       # Normalize to symbol
       type = type.to_s.to_sym
@@ -86,17 +101,26 @@ module Instrument
 
       return @@type_map[type]
     end
-    
-    # Registers subclasses with the Control base class.
+
+    ##
+    # Registers subclasses with the Control base class.  Called automatically.
+    #
+    #  @param [Class] klass the subclass that is extending Control
     def self.inherited(klass)
       if !defined?(@@control_subclasses) || @@control_subclasses == nil
         @@control_subclasses = []
       end
       @@control_subclasses << klass
       @@control_subclasses.uniq!
+      super
     end
     
+    ##
     # Looks up a Control by name.
+    #
+    #  @param [String] control_name the control name of the Control
+    #  @return [Instrument::Control, NilClass] the desired control or nil
+    #  @see Instrument::Control.control_name
     def self.lookup(control_name)
       for control_subclass in (@@control_subclasses || [])
         if control_subclass.control_name == control_name
@@ -106,17 +130,26 @@ module Instrument
       return nil
     end
     
-    # Creates a new Control object.
+    ##
+    # Creates a new Control object.  Subclasses should not override this.
+    #
+    #  @param [Hash] options a set of options required by the control
+    #  @return [Instrument::Control] the instanitated control
     def initialize(options={})
       @options = options
     end
     
+    ##
     # Returns the options that were used to create the Control.
+    #
+    #  @return [Hash] a set of options required by the control
     attr_reader :options
     
+    ##
     # Returns the Control's name.  By default, this is the control's class
-    # name, tranformed into   This method
-    # may be overridden by a Control.
+    # name, tranformed into   This method may be overridden by a Control.
+    #
+    #  @return [String] the control name
     def self.control_name
       return nil if self.name == "Instrument::Control"
       return self.name.
@@ -127,7 +160,15 @@ module Instrument
         downcase
     end
     
+    ##
     # Relays to_format messages to the render method.
+    #
+    #  @param [Symbol] method the method being called
+    #  @param [Array] params the method's parameters
+    #  @param [Proc] block the block being passed to the method
+    #  @return [Object] the return value
+    #  @raise NoMethodError if the method wasn't handled
+    #  @see Instrument::Control#render
     def method_missing(method, *params, &block)
       if method.to_s =~ /^to_/
         format = method.to_s.gsub(/^to_/, "")
@@ -144,8 +185,14 @@ module Instrument
       end
     end
     
+    ##
     # Renders a control in a specific format.
-    def render(format, options={})
+    #
+    #  @param [String] format the format name for the template output
+    #  @return [String] the rendered output in the desired format
+    #  @raise Instrument::ResourceNotFoundError if the template is missing
+    #  @raise Instrument::InvalidTemplateEngineError if type isn't registered
+    def render(format)
       # Locate the template.
       path = nil
       for load_path in $CONTROL_PATH

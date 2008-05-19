@@ -24,6 +24,7 @@
 require "instrument/control"
 
 module Instrument
+  ##
   # A module which you can mixin to allow for abbreviated control
   # creation.
   #
@@ -55,6 +56,7 @@ module Instrument
     #  @param [Array] params the method's parameters
     #  @param [Proc] block the block being passed to the method
     #  @return [Instrument::Control] the control being created
+    #  @raise NoMethodError if the method wasn't handled
     def method_missing(method, *params, &block)
       control_class = ::Instrument::Control.lookup(method.to_s)
       if control_class != nil
