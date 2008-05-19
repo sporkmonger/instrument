@@ -1,6 +1,9 @@
 == Instrument
 
-* Homepage[http://instrument.rubyforge.org/]
+Homepage::  instrument.rubyforge.org[http://instrument.rubyforge.org/]
+Author::    Bob Aman  (mailto:bob@sporkmonger.com)
+Copyright:: Copyright © 2008 Day Automation Systems, Inc.
+License::   MIT
 
 == Description
 
