@@ -24,13 +24,37 @@
 require "instrument/control"
 
 module Instrument
+  # A module which you can mixin to allow for abbreviated control
+  # creation.
+  #
+  # == Example
+  #
+  #   include Instrument::ControlBuilder
+  #   
+  #   select_control(:name => "base", :selections => [
+  #     {:label => "One", :value => "1"},
+  #     {:label => "Two", :value => "2"},
+  #     {:label => "Three", :value => "3"},
+  #     {:label => "Four", :value => "4"}
+  #   ]).to_xhtml  
   module ControlBuilder
+    ##
     # Prevents Kernel#select from being accidentally called.
+    #
+    #  @param [Array] params the method's parameters
+    #  @param [Proc] block the block being passed to the method
+    #  @return [Instrument::Control] the control being created
     def select(*params, &block) # :nodoc:
       return self.method_missing(:select, *params, &block)
     end
 
+    ## 
     # Initializes Instrument::Control subclasses by name.
+    # 
+    #  @param [Symbol] method the method being called
+    #  @param [Array] params the method's parameters
+    #  @param [Proc] block the block being passed to the method
+    #  @return [Instrument::Control] the control being created
     def method_missing(method, *params, &block)
       control_class = ::Instrument::Control.lookup(method.to_s)
       if control_class != nil

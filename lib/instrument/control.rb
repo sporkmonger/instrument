@@ -34,6 +34,16 @@ end
 module Instrument
   # The Instrument::Control class provides a simple way to render nested
   # templates.
+  #
+  # == Example
+  #
+  #   select_control = SelectControl.new(:name => "base", :selections => [
+  #     {:label => "One", :value => "1"},
+  #     {:label => "Two", :value => "2"},
+  #     {:label => "Three", :value => "3"},
+  #     {:label => "Four", :value => "4"}
+  #   ])
+  #   xhtml_output = select_control.to_xhtml
   class Control
     # Registers a template type.  Takes a symbol naming the type, and a
     # block which takes a String as input and an Object to use as the
