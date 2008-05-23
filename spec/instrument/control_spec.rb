@@ -77,7 +77,7 @@ describe Instrument::Control do
     end).should raise_error(Instrument::ResourceNotFoundError)
   end
 
-  it "should raise an Exception if a directory is found instead of a file" do
+  it "should raise an Exception if a template engine is missing" do
     (lambda do
       SelectControl.new.to_txt
     end).should raise_error(Instrument::InvalidTemplateEngineError)
