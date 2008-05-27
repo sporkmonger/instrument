@@ -58,6 +58,18 @@ describe Instrument::Control do
   it "should initialize subclasses via method_missing" do
     Instrument::Control.new.select_control.class.should == SelectControl
   end
+
+  it "should return the same options used during instantiation" do
+    options = {}
+    control = Instrument::Control.new(options)
+    control.options.should eql(options)
+  end
+
+  it "should return the same proc used during instantiation" do
+    proc = lambda {}
+    control = Instrument::Control.new(&proc)
+    control.block.should eql(proc)
+  end
   
   it "should still raise an Exception for non-existent methods" do
     (lambda do

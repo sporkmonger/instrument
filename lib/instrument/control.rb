@@ -134,9 +134,11 @@ module Instrument
     # Creates a new Control object.  Subclasses should not override this.
     #
     #  @param [Hash] options a set of options required by the control
+    #  @yield optionally accepts a block used by the control
     #  @return [Instrument::Control] the instanitated control
-    def initialize(options={})
+    def initialize(options={}, &block)
       @options = options
+      @block = block
     end
     
     ##
@@ -144,6 +146,12 @@ module Instrument
     #
     #  @return [Hash] a set of options required by the control
     attr_reader :options
+    
+    ##
+    # Returns the block that was supplied when the Control was created.
+    #
+    #  @return [Proc] the block used to create the Control
+    attr_reader :block
     
     ##
     # Returns the Control's name.  By default, this is the control's class
