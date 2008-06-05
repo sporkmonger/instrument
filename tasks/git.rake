@@ -10,6 +10,12 @@ namespace :git do
 
     desc "Create a new tag in the Git repository"
     task :create do
+      changelog = File.open("CHANGELOG", "r") { |file| file.read }
+      puts "-" * 80
+      puts changelog
+      puts "-" * 80
+      puts
+
       v = ENV["VERSION"] or abort "Must supply VERSION=x.y.z"
       abort "Versions don't match #{v} vs #{PKG_VERSION}" if v != PKG_VERSION
 
