@@ -22,6 +22,13 @@ namespace :git do
       tag = "#{PKG_NAME}-#{PKG_VERSION}"
       msg = "Release #{PKG_NAME}-#{PKG_VERSION}"
 
+      existing_tags = `git tag -l instrument-*`.split("\n")
+      if existing_tags.include?(tag)
+        warn("Tag already exists, deleting...")
+        unless system "git tag -d #{tag}"
+          abort "Tag deletion failed." 
+        end
+      end
       puts "Creating git tag '#{tag}'..."
       unless system "git tag -a -m \"#{msg}\" #{tag}"
         abort "Tag creation failed." 
