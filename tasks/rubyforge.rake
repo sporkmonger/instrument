@@ -9,6 +9,7 @@ namespace :gem do
     pkg = "pkg/#{GEM_SPEC.full_name}"
 
     rf = RubyForge.new
+    rf.configure
     puts 'Logging in...'
     rf.login
 
