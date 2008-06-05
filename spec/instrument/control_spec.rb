@@ -111,6 +111,10 @@ describe Instrument::Control do
     ]
   end
   
+  it "should have no formats listed for the base class" do
+    Instrument::Control.formats.should == []
+  end
+  
   it "should respond to a normal message" do
     SelectControl.new.should respond_to(:render)
   end

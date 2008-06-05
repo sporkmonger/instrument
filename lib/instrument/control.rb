@@ -173,6 +173,7 @@ module Instrument
     #
     #  @return [Array] the available formats
     def self.formats
+      return [] if self.control_name == nil
       all_templates = []
       all_formats = []
       for load_path in $CONTROL_PATH
