@@ -1,3 +1,9 @@
+== 0.1.2
+
+* controls may now accept a delegate object, which methods will be relayed to
+* controls and control builders now have a proper respond_to? method
+* controls now have a formats method that lists all available formats
+
 == 0.1.1
 
 * controls may now optionally accept a block during initialization
