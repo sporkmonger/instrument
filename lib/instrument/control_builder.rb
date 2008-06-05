@@ -49,6 +49,16 @@ module Instrument
       return self.method_missing(:select, *params, &block)
     end
 
+    ##
+    # Returns true if the control builder responds to the given message.
+    #
+    #  @return [Boolean] if the control builder responds
+    def respond_to?(method, include_private=false)
+      control_class = ::Instrument::Control.lookup(method.to_s)
+      return true if control_class != nil
+      super
+    end
+
     ## 
     # Initializes Instrument::Control subclasses by name.
     # 

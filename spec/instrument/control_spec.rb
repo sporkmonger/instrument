@@ -100,6 +100,51 @@ describe Instrument::Control do
       SelectControl.new.to_xml
     end).should raise_error(ZeroDivisionError)
   end
+  
+  it "should correctly delegate messages to the delegate object" do
+    SelectControl.new(:delegate => [1,2,3]).size.should == 3
+  end
+  
+  it "should have the correct list of formats" do
+    SelectControl.formats.sort.should == [
+      "atom", "html", "json", "txt", "xhtml", "xml"
+    ]
+  end
+  
+  it "should respond to a normal message" do
+    SelectControl.new.should respond_to(:render)
+  end
+  
+  it "should not respond to a bogus message" do
+    SelectControl.new.should_not respond_to(:bogus)
+  end
+
+  it "should respond to valid subclass messages" do
+    Instrument::Control.new.should respond_to(:select_control)
+    SelectControl.new.should respond_to(:select_control)
+  end
+  
+  it "should not respond to invalid subclass messages" do
+    SelectControl.new.should_not respond_to(:bogus_control)
+  end
+  
+  it "should respond to a valid format conversion message" do
+    SelectControl.new.should respond_to(:to_atom)
+  end
+  
+  it "should not respond to an invalid format conversion message" do
+    SelectControl.new.should_not respond_to(:to_bogus)
+  end
+  
+  it "should respond to messages available on a delegated object" do
+    SelectControl.new(:delegate => []).should respond_to(:<<)
+    SelectControl.new(:delegate => 42).should respond_to(:>>)
+    SelectControl.new(:delegate => 42).should respond_to(:<<)
+  end
+  
+  it "should not respond to messages unavailable on a delegated object" do
+    SelectControl.new(:delegate => []).should_not respond_to(:>>)
+  end
 end
 
 describe Instrument::Control, "when rendered as XHTML with Haml" do

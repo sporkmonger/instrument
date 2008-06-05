@@ -169,6 +169,52 @@ module Instrument
     end
     
     ##
+    # Returns a list of formats that this control may be rendered as.
+    #
+    #  @return [Array] the available formats
+    def self.formats
+      all_templates = []
+      all_formats = []
+      for load_path in $CONTROL_PATH
+        full_name = File.expand_path(
+          File.join(load_path, self.control_name))
+
+        # Check to make sure the requested template is within the load path
+        # to avoid inadvertent rendering of say, /etc/passwd
+        next if full_name.index(File.expand_path(load_path)) != 0
+
+        all_templates.concat(Dir.glob(full_name + ".*"))
+      end
+      for template in all_templates
+        next if File.directory?(template)
+        all_formats << template[/^.*\.([-_a-zA-Z0-9]+)\..*$/, 1]
+      end
+      return all_formats.uniq.reject { |f| f.nil? }
+    end
+
+    ##
+    # Returns true if the control responds to the given message.
+    #
+    #  @return [Boolean] if the control responds
+    def respond_to?(method, include_private=false)
+      if method.to_s =~ /^to_/
+        format = method.to_s.gsub(/^to_/, "")
+        return self.class.formats.include?(format)
+      else
+        control_class = self.class.lookup(method.to_s)
+        if control_class != nil
+          return true
+        else
+          if options[:delegate] != nil &&
+              options[:delegate].respond_to?(method)
+            return true
+          end
+        end
+      end
+      super
+    end
+
+    ##
     # Relays to_format messages to the render method.
     #
     #  @param [Symbol] method the method being called
@@ -180,15 +226,20 @@ module Instrument
     def method_missing(method, *params, &block)
       if method.to_s =~ /^to_/
         format = method.to_s.gsub(/^to_/, "")
-        self.send(:render, format, *params, &block)
+        self.render(format, *params, &block)
       else
         control_class = self.class.lookup(method.to_s)
         if control_class != nil
           control_class.new(*params, &block)
         else
-          raise NoMethodError,
-            "undefined method `#{method}' for " +
-            "#{self.inspect}:#{self.class.name}"
+          if options[:delegate] != nil &&
+              options[:delegate].respond_to?(method)
+            options[:delegate].send(method, *params, &block)
+          else
+            raise NoMethodError,
+              "undefined method `#{method}' for " +
+              "#{self.inspect}:#{self.class.name}"
+          end
         end
       end
     end

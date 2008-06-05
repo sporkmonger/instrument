@@ -15,7 +15,7 @@ end
 class Select < Instrument::Control
 end
 
-describe Instrument::ControlBuilder do
+describe Instrument::ControlBuilder, "extending another object" do
   class ExtendedObject
     include Instrument::ControlBuilder
   end
@@ -33,5 +33,21 @@ describe Instrument::ControlBuilder do
     (lambda do
       @extended_object.bogus
     end).should raise_error(NoMethodError)
+  end
+  
+  it "should respond to a normal message" do
+    @extended_object.should respond_to(:to_s)
+  end
+  
+  it "should not respond to a bogus message" do
+    @extended_object.should_not respond_to(:bogus)
+  end
+  
+  it "should respond to a valid control name message" do
+    @extended_object.should respond_to(:image_control)
+  end
+  
+  it "should not respond to an invalid control name message" do
+    @extended_object.should_not respond_to(:bogus_control)
   end
 end
