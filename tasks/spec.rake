@@ -31,9 +31,11 @@ namespace :spec do
     t.fail_on_error = false
   end  
 
-  desc "Browse the code coverage report."
-  task :rcov_browse => :rcov do
-    Rake.browse("coverage/index.html")
+  namespace :rcov do
+    desc "Browse the code coverage report."
+    task :browse => "spec:rcov" do
+      Rake.browse("coverage/index.html")
+    end
   end
 end
 
