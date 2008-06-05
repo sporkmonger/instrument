@@ -20,7 +20,7 @@ namespace :gem do
 
     s.author = "Bob Aman"
     s.email = "bob@sporkmonger.com"
-    s.homepage = "http://sporkmonger.com/"
+    s.homepage = "http://#{PKG_NAME}.rubyforge.org/"
     s.rubyforge_project = RUBY_FORGE_PROJECT
   end
 
