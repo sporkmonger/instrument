@@ -122,7 +122,10 @@ module Instrument
     #  @return [Instrument::Control, NilClass] the desired control or nil
     #  @see Instrument::Control.control_name
     def self.lookup(control_name)
-      for control_subclass in (@@control_subclasses || [])
+      if !defined?(@@control_subclasses) || @@control_subclasses == nil
+        @@control_subclasses = []
+      end
+      for control_subclass in @@control_subclasses
         if control_subclass.control_name == control_name
           return control_subclass
         end
