@@ -1,6 +1,6 @@
 # ++
 # Instrument, Copyright (c) 2008 Day Automation Systems, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
 # "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 # distribute, sublicense, and/or sell copies of the Software, and to
 # permit persons to whom the Software is furnished to do so, subject to
 # the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -52,7 +52,7 @@ module Instrument
     # execution context and returns the rendered template output as a
     # String.  The block should ensure that all necessary libraries are
     # loaded.
-    # 
+    #
     #  @param [Array] type_list the template types being registered
     #  @yield the block generates the template output
     #  @yieldparam [String] the template input
@@ -60,7 +60,7 @@ module Instrument
     def self.register_type(*type_list, &block)
       # Ensure the @@type_map is initialized.
       self.types
-      
+
       for type in type_list
         # Normalize to symbol
         type = type.to_s.to_sym
@@ -68,7 +68,7 @@ module Instrument
       end
       return nil
     end
-    
+
     ##
     # Returns a list of registered template types.
     #
@@ -114,7 +114,7 @@ module Instrument
       @@control_subclasses.uniq!
       super
     end
-    
+
     ##
     # Looks up a Control by name.
     #
@@ -132,7 +132,7 @@ module Instrument
       end
       return nil
     end
-    
+
     ##
     # Creates a new Control object.  Subclasses should not override this.
     #
@@ -143,19 +143,19 @@ module Instrument
       @options = options
       @block = block
     end
-    
+
     ##
     # Returns the options that were used to create the Control.
     #
     #  @return [Hash] a set of options required by the control
     attr_reader :options
-    
+
     ##
     # Returns the block that was supplied when the Control was created.
     #
     #  @return [Proc] the block used to create the Control
     attr_reader :block
-    
+
     ##
     # Returns the Control's name.  By default, this is the control's class
     # name, tranformed into   This method may be overridden by a Control.
@@ -170,7 +170,7 @@ module Instrument
         tr("-", "_").
         downcase
     end
-    
+
     ##
     # Returns a list of formats that this control may be rendered as.
     #
@@ -247,7 +247,7 @@ module Instrument
         end
       end
     end
-    
+
     ##
     # Renders a control in a specific format.
     #
@@ -267,7 +267,7 @@ module Instrument
         next if full_name.index(File.expand_path(load_path)) != 0
 
         templates = Dir.glob(full_name + ".#{format}.*")
-        
+
         # Select the first template matched.  If there's more than one,
         # the extras will be ignored.
         template = templates.first

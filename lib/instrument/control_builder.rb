@@ -1,6 +1,6 @@
 # ++
 # Instrument, Copyright (c) 2008 Day Automation Systems, Inc.
-# 
+#
 # Permission is hereby granted, free of charge, to any person obtaining
 # a copy of this software and associated documentation files (the
 # "Software"), to deal in the Software without restriction, including
@@ -8,10 +8,10 @@
 # distribute, sublicense, and/or sell copies of the Software, and to
 # permit persons to whom the Software is furnished to do so, subject to
 # the following conditions:
-# 
+#
 # The above copyright notice and this permission notice shall be
 # included in all copies or substantial portions of the Software.
-# 
+#
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 # MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -31,13 +31,13 @@ module Instrument
   # == Example
   #
   #   include Instrument::ControlBuilder
-  #   
+  #
   #   select_control(:name => "base", :selections => [
   #     {:label => "One", :value => "1"},
   #     {:label => "Two", :value => "2"},
   #     {:label => "Three", :value => "3"},
   #     {:label => "Four", :value => "4"}
-  #   ]).to_xhtml  
+  #   ]).to_xhtml
   module ControlBuilder
     ##
     # Prevents Kernel#select from being accidentally called.
@@ -59,9 +59,9 @@ module Instrument
       super
     end
 
-    ## 
+    ##
     # Initializes Instrument::Control subclasses by name.
-    # 
+    #
     #  @param [Symbol] method the method being called
     #  @param [Array] params the method's parameters
     #  @param [Proc] block the block being passed to the method
@@ -76,6 +76,6 @@ module Instrument
           "undefined method `#{method}' for " +
           "#{self.inspect}:#{self.class.name}"
       end
-    end    
+    end
   end
 end

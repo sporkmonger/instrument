@@ -1,6 +1,6 @@
 require "uuidtools"
 require "time"
-xml.instruct! :xml, :version=>"1.0" 
+xml.instruct! :xml, :version=>"1.0"
 xml.feed("xmlns" => "http://www.w3.org/2005/Atom", "xml:lang" => "en_US") do
   xml.id("urn:uuid:4a11e26e-239c-11dd-adf9-001ec2186a45")
   xml.title("Select Control")

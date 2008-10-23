@@ -6,11 +6,11 @@ class SelectControl < Instrument::Control
     def initialize(label, value)
       @label, @value = label, value
     end
-    
+
     attr_accessor :label
     attr_accessor :value
   end
-  
+
   def element_id
     return self.options[:id] || self.options[:name]
   end
@@ -18,7 +18,7 @@ class SelectControl < Instrument::Control
   def element_name
     return self.options[:name]
   end
-  
+
   def selections
     if !defined?(@selections) || @selections == nil
       @selections = []
@@ -70,7 +70,7 @@ describe Instrument::Control do
     control = Instrument::Control.new(&proc)
     control.block.should eql(proc)
   end
-  
+
   it "should still raise an Exception for non-existent methods" do
     (lambda do
       Instrument::Control.new.bogus
@@ -100,25 +100,25 @@ describe Instrument::Control do
       SelectControl.new.to_xml
     end).should raise_error(ZeroDivisionError)
   end
-  
+
   it "should correctly delegate messages to the delegate object" do
     SelectControl.new(:delegate => [1,2,3]).size.should == 3
   end
-  
+
   it "should have the correct list of formats" do
     SelectControl.formats.sort.should == [
       "atom", "html", "json", "txt", "xhtml", "xml"
     ]
   end
-  
+
   it "should have no formats listed for the base class" do
     Instrument::Control.formats.should == []
   end
-  
+
   it "should respond to a normal message" do
     SelectControl.new.should respond_to(:render)
   end
-  
+
   it "should not respond to a bogus message" do
     SelectControl.new.should_not respond_to(:bogus)
   end
@@ -127,25 +127,25 @@ describe Instrument::Control do
     Instrument::Control.new.should respond_to(:select_control)
     SelectControl.new.should respond_to(:select_control)
   end
-  
+
   it "should not respond to invalid subclass messages" do
     SelectControl.new.should_not respond_to(:bogus_control)
   end
-  
+
   it "should respond to a valid format conversion message" do
     SelectControl.new.should respond_to(:to_atom)
   end
-  
+
   it "should not respond to an invalid format conversion message" do
     SelectControl.new.should_not respond_to(:to_bogus)
   end
-  
+
   it "should respond to messages available on a delegated object" do
     SelectControl.new(:delegate => []).should respond_to(:<<)
     SelectControl.new(:delegate => 42).should respond_to(:>>)
     SelectControl.new(:delegate => 42).should respond_to(:<<)
   end
-  
+
   it "should not respond to messages unavailable on a delegated object" do
     SelectControl.new(:delegate => []).should_not respond_to(:>>)
   end
@@ -162,7 +162,7 @@ describe Instrument::Control, "when rendered as XHTML with Haml" do
   it "should have the correct id and name" do
     @xhtml.should match(/<select id="base" name="base">/)
   end
-  
+
   it "should have options for all of the given selections" do
     @xhtml.should match(/<option value="First"/)
     @xhtml.should match(/<option value="Second"/)
@@ -185,7 +185,7 @@ describe Instrument::Control, "when rendered as HTML with Markaby" do
     @html.should match(/id="base"/)
     @html.should match(/name="base"/)
   end
-  
+
   it "should have options for all of the given selections" do
     @html.should match(/<option value="First"/)
     @html.should match(/<option value="Second"/)
@@ -205,7 +205,7 @@ describe Instrument::Control, "when rendered as Atom with XML Builder" do
   it "should have the correct id and name" do
     @atom.should match(/<title>Select Control<\/title>/)
   end
-  
+
   it "should have options for all of the given selections" do
     @atom.should match(/<title>First<\/title>/)
     @atom.should match(/<title>Second<\/title>/)
@@ -226,7 +226,7 @@ describe Instrument::Control, "when rendered as JSON with Erubis" do
     @atom.should match(/"id": "base"/)
     @atom.should match(/"name": "base"/)
   end
-  
+
   it "should have options for all of the given selections" do
     @atom.should match(/"label": "First"/)
     @atom.should match(/"value": "First"/)
