@@ -53,10 +53,15 @@ module Instrument
     # String.  The block should ensure that all necessary libraries are
     # loaded.
     #
-    #  @param [Array] type_list the template types being registered
-    #  @yield the block generates the template output
-    #  @yieldparam [String] the template input
-    #  @yieldparam [Object] the execution context for the template
+    #  @param [Array] type_list The template types being registered.
+    #  @yield The block generates the template output.
+    #  @yieldparam [String] input
+    #    The template input.
+    #  @yieldparam [Hash] options
+    #    Additional parameters.
+    #    :context - The execution context for the template, which will be set
+    #      to the control object.
+    #    :filename - The filename of the template being rendered.
     def self.register_type(*type_list, &block)
       # Ensure the @@type_map is initialized.
       self.types
@@ -107,9 +112,7 @@ module Instrument
     #
     #  @param [Class] klass the subclass that is extending Control
     def self.inherited(klass)
-      if !defined?(@@control_subclasses) || @@control_subclasses == nil
-        @@control_subclasses = []
-      end
+      @@control_subclasses ||= []
       @@control_subclasses << klass
       @@control_subclasses.uniq!
       super
@@ -122,9 +125,7 @@ module Instrument
     #  @return [Instrument::Control, NilClass] the desired control or nil
     #  @see Instrument::Control.control_name
     def self.lookup(control_name)
-      if !defined?(@@control_subclasses) || @@control_subclasses == nil
-        @@control_subclasses = []
-      end
+      @@control_subclasses ||= []
       for control_subclass in @@control_subclasses
         if control_subclass.control_name == control_name
           return control_subclass
@@ -298,7 +299,9 @@ module Instrument
       end
 
       begin
-        return self.class.processor(type).call(raw_content, self)
+        return self.class.processor(type).call(
+          raw_content, {:context => self, :filename => path}
+        )
       rescue Exception => e
         e.message <<
           "\nError occurred while rendering " +
@@ -310,23 +313,36 @@ module Instrument
 end
 
 # Register the default types.
-Instrument::Control.register_type(:haml) do |input, context|
+Instrument::Control.register_type(:haml) do |input, options|
   require "haml"
-  Haml::Engine.new(input, {:attr_wrapper => "\""}).render(context)
+  context = options[:context]
+  filename = options[:filename]
+  Haml::Engine.new(
+    input, :attr_wrapper => "\"", :filename => filename
+  ).render(context)
 end
-Instrument::Control.register_type(:erb, :rhtml) do |input, context|
+Instrument::Control.register_type(:erb, :rhtml) do |input, options|
   begin; require "erubis"; rescue LoadError; require "erb"; end
+  context = options[:context]
+  filename = options[:filename]
+  binding = context.instance_eval { (lambda {}).binding }
   erb = Erubis::Eruby.new(input) rescue ERB.new(input)
-  erb.result(context.send(:binding))
+  if erb.respond_to?(:filename=)
+    erb.filename = filename
+  end
+  erb.result(binding)
 end
-Instrument::Control.register_type(:mab) do |input, context|
+Instrument::Control.register_type(:mab) do |input, options|
   require "markaby"
+  context = options[:context]
   Markaby::Builder.new({}, context).capture do
     eval(input)
   end
 end
-Instrument::Control.register_type(:rxml) do |input, context|
+Instrument::Control.register_type(:rxml) do |input, options|
   require "builder"
+  context = options[:context]
   xml = Builder::XmlMarkup.new(:indent => 2)
-  eval(input, context.send(:binding))
+  binding = context.instance_eval { (lambda {}).binding }
+  eval(input, binding)
 end
