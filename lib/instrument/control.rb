@@ -309,6 +309,14 @@ module Instrument
         raise e
       end
     end
+
+    ##
+    # Returns a <tt>String</tt> representation of the Control object's state.
+    #
+    # @return [String] The Control object's state, as a <tt>String</tt>.
+    def inspect
+      sprintf("#<%s:%#0x>", self.class.to_s, self.object_id)
+    end
   end
 end
 
